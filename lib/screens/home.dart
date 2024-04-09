@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:demo_games/models/GameModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../utiles/app_colors.dart';
@@ -11,6 +15,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../widgets/games_categories.dart';
 import '../widgets/games_slider.dart';
 import '../widgets/top_games.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -20,6 +25,45 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // option 1 for make api call
+  // List<dynamic> games = [];
+  // Future<void> fetchGames() async {
+  //   final response = await http
+  //       .get(Uri.parse("https://games.animegadid.com/top-games.json"));
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     print(data[0]['title']);
+  //     setState(() {
+  //       games = data;
+  //     });
+  //
+  //     print(games);
+  //   } else {
+  //     throw Exception("Failed to load data");
+  //   }
+  // }
+
+  //option 2 api call with model
+  List<GameModel> games = [];
+  fetchGames() async {
+    final response = await http
+        .get(Uri.parse("https://games.animegadid.com/top-games.json"));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        games = data.map((json) => GameModel.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception("Failed to load data");
+    }
+  }
+
+  @override
+  void initState() {
+    fetchGames();
+    super.initState();
+  }
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   // Define your pages here
 
@@ -93,9 +137,13 @@ class _HomeState extends State<Home> {
                   height: 10,
                 ),
                 //categories////////////////////
-                GamesCategories(),
+                GamesCategories(
+                  games: games,
+                ),
                 //slider/////////////////////////////////////////////////////////////////////
-                const GamesSlider(),
+                GamesSlider(
+                  games: games,
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
@@ -110,7 +158,9 @@ class _HomeState extends State<Home> {
                   height: 20,
                 ),
                 //top games/////////////////////////////////////////////////////////////////////
-                const TopGames()
+                TopGames(
+                  games: games,
+                )
               ],
             ),
           ),

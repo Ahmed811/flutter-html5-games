@@ -1,11 +1,13 @@
+import 'package:demo_games/models/GameModel.dart';
 import 'package:flutter/material.dart';
 
 import '../utiles/dummy_data.dart';
 import 'game_category.dart';
 
 class GamesCategories extends StatelessWidget {
+  final List<GameModel> games;
   bool categoryIsSelected = false;
-  GamesCategories({super.key});
+  GamesCategories({super.key, required this.games});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,6 @@ class GamesCategories extends StatelessWidget {
               GameCategory(
                 gameCategory: games[i].category,
                 isSelected: categoryIsSelected,
-                key: Key(i.toString()),
               )
           ],
         ));

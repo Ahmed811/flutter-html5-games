@@ -1,11 +1,13 @@
+import '../models/GameModel.dart';
 import '../utiles/dummy_data.dart';
 import 'package:flutter/material.dart';
-import '../screens/game_details2.dart';
+import '../screens/game_details.dart';
 import '../utiles/app_colors.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class TopGames extends StatelessWidget {
-  const TopGames({super.key});
+  final List<GameModel> games;
+  TopGames({super.key, required this.games});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +75,7 @@ class TopGames extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    GameDetails2(gameItem: games[i])));
+                                    GameDetails2(game: games[i])));
                       },
                       child: Text(
                         "Play",

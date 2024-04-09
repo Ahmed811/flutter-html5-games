@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../models/GameModel.dart';
 import '../utiles/dummy_data.dart';
 import 'package:flutter/material.dart';
 import '../screens/game_details.dart';
@@ -9,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class GamesSlider extends StatelessWidget {
-  const GamesSlider({super.key});
+  final List<GameModel> games;
+  GamesSlider({super.key, required this.games});
 
   @override
   Widget build(BuildContext context) {
