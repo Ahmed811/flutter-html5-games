@@ -33,6 +33,8 @@ dependencies:
   flutter_share: ^2.0.0
   webview_flutter: ^4.7.0
   draggable_home: ^1.0.5
+  http:
+  flutter_inappwebview: ^6.0.0
 
 dev_dependencies:
   flutter_test:
