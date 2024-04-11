@@ -1,3 +1,6 @@
+import 'package:demo_games/controller/GameController.dart';
+import 'package:provider/provider.dart';
+
 import '../models/GameModel.dart';
 import '../utiles/dummy_data.dart';
 import 'package:flutter/material.dart';
@@ -6,17 +9,18 @@ import '../utiles/app_colors.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class TopGames extends StatelessWidget {
-  final List<GameModel> games;
-  TopGames({super.key, required this.games});
+  // final List<GameModel> games;
+  TopGames({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final gameController = Provider.of<GameController>(context);
     return Expanded(
       flex: 5,
       child: ListView(
         padding: EdgeInsets.all(0),
         children: [
-          for (int i = 0; i < games.length; i++)
+          for (final game in gameController.games)
             Column(
               children: [
                 Row(
@@ -27,7 +31,7 @@ class TopGames extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          games[i].thumb,
+                          game.thumb,
                           fit: BoxFit.cover,
                           width: 80,
                         ),
@@ -39,7 +43,7 @@ class TopGames extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            games[i].title,
+                            game.title,
                             style: TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 16),
                             maxLines: 1,
@@ -75,7 +79,7 @@ class TopGames extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    GameDetails2(game: games[i])));
+                                    GameDetails2(game: game)));
                       },
                       child: Text(
                         "Play",
@@ -90,7 +94,7 @@ class TopGames extends StatelessWidget {
                   height: 20,
                 )
               ],
-            ),
+            )
         ],
       ),
     );

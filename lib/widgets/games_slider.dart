@@ -1,4 +1,7 @@
 import 'dart:math';
+import 'package:provider/provider.dart';
+
+import '../controller/GameController.dart';
 import '../models/GameModel.dart';
 import '../utiles/dummy_data.dart';
 import 'package:flutter/material.dart';
@@ -10,18 +13,22 @@ import 'package:flutter/material.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class GamesSlider extends StatelessWidget {
-  final List<GameModel> games;
-  GamesSlider({super.key, required this.games});
+  // final List<GameModel> games;
+
+  GamesSlider({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final gameController = Provider.of<GameController>(context);
     return Expanded(
       flex: 4,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: CarouselSlider(
           items: [
-            for (int i = 0; i < games.length; i++)
+            for (final game in gameController.games)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Stack(
@@ -29,7 +36,7 @@ class GamesSlider extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Image.network(
-                        games[i].thumb,
+                        game.thumb,
                         fit: BoxFit.cover,
                         width: 400,
                       ),
@@ -58,7 +65,7 @@ class GamesSlider extends StatelessWidget {
                     ),
                     Positioned(
                       child: Text(
-                        games[i].title,
+                        game.title,
                         style: TextStyle(
                             color: Color(0xffFCFCFC),
                             fontSize: 20,
