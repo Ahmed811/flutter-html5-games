@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:demo_games/controller/GameController.dart';
 import 'package:demo_games/models/GameModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 import '../utiles/app_colors.dart';
 
@@ -17,58 +19,15 @@ import '../widgets/games_slider.dart';
 import '../widgets/top_games.dart';
 import 'package:http/http.dart' as http;
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  // option 1 for make api call
-  // List<dynamic> games = [];
-  // Future<void> fetchGames() async {
-  //   final response = await http
-  //       .get(Uri.parse("https://games.animegadid.com/top-games.json"));
-  //   if (response.statusCode == 200) {
-  //     final data = jsonDecode(response.body);
-  //     print(data[0]['title']);
-  //     setState(() {
-  //       games = data;
-  //     });
-  //
-  //     print(games);
-  //   } else {
-  //     throw Exception("Failed to load data");
-  //   }
-  // }
-
-  //option 2 api call with model
-  List<GameModel> games = [];
-  fetchGames() async {
-    final response = await http
-        .get(Uri.parse("https://games.animegadid.com/top-games.json"));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      setState(() {
-        games = data.map((json) => GameModel.fromJson(json)).toList();
-      });
-    } else {
-      throw Exception("Failed to load data");
-    }
-  }
-
-  @override
-  void initState() {
-    fetchGames();
-    super.initState();
-  }
-
+class Home extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  // Define your pages here
+  Home({super.key});
 
+  // Define your pages here
   @override
   Widget build(BuildContext context) {
+    final gameController = Provider.of<GameController>(context);
+    gameController.fetchGames();
     return Scaffold(
       key: scaffoldKey,
       extendBodyBehindAppBar: true,
@@ -107,19 +66,7 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: [
           //app background
-          Opacity(
-            opacity: .5,
-            child: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [KScaffoldColor1, KScaffoldColor2, KScaffoldColor3],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              )),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            ),
-          ),
+          buildBackground(context: context),
           Padding(
             padding: const EdgeInsets.only(
                 top: 110.0, left: 20, right: 20, bottom: 20),
@@ -137,13 +84,9 @@ class _HomeState extends State<Home> {
                   height: 10,
                 ),
                 //categories////////////////////
-                GamesCategories(
-                  games: games,
-                ),
+                GamesCategories(),
                 //slider/////////////////////////////////////////////////////////////////////
-                GamesSlider(
-                  games: games,
-                ),
+                GamesSlider(),
                 const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
@@ -158,9 +101,7 @@ class _HomeState extends State<Home> {
                   height: 20,
                 ),
                 //top games/////////////////////////////////////////////////////////////////////
-                TopGames(
-                  games: games,
-                )
+                TopGames()
               ],
             ),
           ),
@@ -168,6 +109,23 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+//home background
+Widget buildBackground({required BuildContext context}) {
+  return Opacity(
+    opacity: .5,
+    child: Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+        colors: [KScaffoldColor1, KScaffoldColor2, KScaffoldColor3],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      )),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+    ),
+  );
 }
 
 void _openBottomSheet(BuildContext context) {
